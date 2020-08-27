@@ -13,7 +13,7 @@
 
 
 (define (sqrt x)
-  (try 1 x))
+  (try 1.0 x))
 
 
 (define (another-sqrt x)
@@ -28,4 +28,4 @@
   (define (improve guess)
     (/ (+ guess (/ x guess)) 2))
 
-  (try 1))
+  (try 1.0))
