@@ -1,9 +1,11 @@
 #lang sicp
 
 (define (fib n)
-  (define (fib-iter curr next count)
-    (if (<= count 0)
+  (define (fib-iter prev curr count)
+    (if (<= count 1)
         curr
-        (fib-iter next (+ curr next) (- count 1))))
+        (fib-iter curr (+ prev curr) (- count 1))))
 
-  (fib-iter 0 1 n))
+  (if (< n 1)
+      n
+      (fib-iter 0 1 n)))

@@ -9,16 +9,16 @@
 
 
 (define (ex1.11-iterative n)
-  (define (ex1.11-iter curr next next-next count)
-    (if (<= count 0)
+  (define (ex1.11-iter preprev prev curr count)
+    (if (<= count 2)
         curr
-        (ex1.11-iter next
-                     next-next
-                     (+ next-next
-                        (* 2 next)
-                        (* 3 curr))
+        (ex1.11-iter prev
+                     curr
+                     (+ curr
+                        (* 2 prev)
+                        (* 3 preprev))
                      (- count 1))))
   
-  (if (< n 0)
+  (if (< n 2)
       n
       (ex1.11-iter 0 1 2 n)))
