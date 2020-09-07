@@ -1,4 +1,4 @@
-#lang racket
+#lang sicp
 
 (define (square x) (* x x)) 
   
@@ -18,7 +18,7 @@
         (if (= (expmod curr n n) curr)
             (iter (+ curr 1) n)
             #f)))
-  (if (implies (iter 2 n) expected)
+  (if (eq? (iter 2 n) expected)
       (display "OK")
       (display "Fooled"))
   (newline))

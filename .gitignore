@@ -1,3 +1,4 @@
 *.bak
 temp.rkt
+temp.ss
 .vscode

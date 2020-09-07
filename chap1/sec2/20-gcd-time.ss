@@ -19,7 +19,6 @@
 ; in the normal-order evaluation of (gcd 206 40)?
 
 
-
 ; SOLUTION http://community.schemewiki.org/?sicp-ex-1.20
 
 ; Let b_i be the value of b at the n'th invocation of gcd(a,b).
