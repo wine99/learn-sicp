@@ -22,4 +22,4 @@
            (* 4 y))))
   
   (* (/ h 3)
-     (sum term 0 + fixed-n)))
+     (sum term 0 inc fixed-n)))
