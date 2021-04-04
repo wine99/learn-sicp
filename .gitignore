@@ -1,4 +1,5 @@
+.vscode
 *.bak
 temp.rkt
 temp.ss
-.vscode
+temp.scm
