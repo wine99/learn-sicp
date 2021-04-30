@@ -13,4 +13,6 @@ section 2.5
 
 Most questions in 2.5 are not done. Will try to put all things in 2.5 together in the future and building a system that handles various types of numeric, algebra and operations, using the 'Data-Directed Programming'.
 
+### Chap3
 
+section 3.3.4, 3.3.5
