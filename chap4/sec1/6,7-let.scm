@@ -314,7 +314,6 @@
         (eval 'false env)
         (let ((first-clause-result (eval (car clauses) env)))
           (if (true? first-clause-result)
-
               first-clause-result
               (eval-or-clauses (cdr clauses) env)))))
   (eval-or-clauses (cdr exp) env))
