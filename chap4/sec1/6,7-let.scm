@@ -26,6 +26,19 @@
         (else
          (error "Unkown expression type - EVAL" exp))))
 
+(define (my-apply procedure arguments)
+  (cond ((primitive-procedure? procedure)
+         (apply-primitive-procedure procedure arguments))
+        ((compound-procedure? procedure)
+         (eval-sequence
+          (procedure-body procedure)
+          (extend-environment
+           (procedure-parameters procedure)
+           arguments
+           (procedure-environment procedure))))
+        (else
+         "Uknown procedure type -- APPLY" procedure)))
+
 (define (list-of-values exps env)
   (if (no-operands? exps)
       '()
