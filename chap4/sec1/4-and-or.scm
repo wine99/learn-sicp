@@ -1,11 +1,6 @@
 (define apply-in-underlying-scheme apply)
 
 (define (eval exp env)
-  (display "eval exp") (newline)
-  (display exp) (newline)
-  (display "eval env") (newline)
-  (display env) (newline)
-  (newline)
   (cond ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
         ((quoted? exp) (text-of-quotation exp))
@@ -19,29 +14,15 @@
         ((begin? exp)
          (eval-sequence (begin-actions exp) env))
         ((cond? exp) (eval (cond->if exp) env))
+; -----------------------------------------------
+        ((and? exp) (eval-and exp env))
+        ((or? exp) (eval-or exp env))
+; -----------------------------------------------
         ((application? exp)
          (my-apply (eval (operator exp) env)
                    (list-of-values (operands exp) env)))
         (else
          (error "Unkown expression type - EVAL" exp))))
-
-(define (my-apply procedure arguments)
-  (display "apply proc") (newline)
-  (display procedure) (newline)
-  (display "apply args") (newline)
-  (display arguments) (newline)
-  (newline)
-  (cond ((primitive-procedure? procedure)
-         (apply-primitive-procedure procedure arguments))
-        ((compound-procedure? procedure)
-         (eval-sequence
-          (procedure-body procedure)
-          (extend-environment
-           (procedure-parameters procedure)
-           arguments
-           (procedure-environment procedure))))
-        (else
-         "Uknown procedure type -- APPLY" procedure)))
 
 (define (list-of-values exps env)
   (if (no-operands? exps)
@@ -309,36 +290,46 @@
    (primitive-implementation proc) args))
 
 
+; -----------------------------------------------
+(define (and? exp) (tagged-list? exp 'and))
+(define (or? exp) (tagged-list? exp 'or))
+
+(define (eval-and exp env)
+  (define (eval-and-clauses clauses env)
+    (let ((first-clause-result (eval (car clauses) env))
+          (rest-clauses (cdr clauses)))
+      (cond ((null? rest-clauses)
+             first-clause-result)
+            ((true? first-clause-result)
+             (eval-and-clauses rest-clauses env))
+            (else (eval 'false env)))))
+  (if (null? (cdr exp))
+      (eval 'true env)
+      (eval-and-clauses (cdr exp) env)))
+
+(define (eval-or exp env)
+  (define (eval-or-clauses clauses env)
+    (if (null? clauses)
+        (eval 'false env)
+        (let ((first-clause-result (eval (car clauses) env)))
+          (if (true? first-clause-result)
+              first-clause-result
+              (eval-or-clauses (cdr clauses) env)))))
+  (eval-or-clauses (cdr exp) env))
+; -----------------------------------------------
+
 (define the-global-environment
-  (setup-environment))
+  (setup-environment)
 
-(define input-prompt  ";;; M-Eval input:")
-(define output-prompt ";;; M-Eval value:")
 
-(define (driver-loop)
-  (prompt-for-input input-prompt)
-  (let ((input (read)))
-    (let ((output
-           (eval input
-                 the-global-environment)))
-      (announce-output output-prompt)
-      (user-print output)))
-  (driver-loop))
+(eval '(and 1 false) the-global-environment)
+; => #f
 
-(define (prompt-for-input string)
-  (newline) (newline)
-  (display string) (newline))
+(eval '(and 1 2) the-global-environment)
+; => 2
 
-(define (announce-output string)
-  (newline) (display string) (newline))
+(eval '(or 1 false) the-global-environment)
+; => 1
 
-(define (user-print object)
-  (if (compound-procedure? object)
-      (display
-       (list 'compound-procedure
-             (procedure-parameters object)
-             (procedure-body object)
-             '<procedure-env>))
-      (display object)))
-
-;(driver-loop)
+(eval '(or false false) the-global-environment)
+; => #f
