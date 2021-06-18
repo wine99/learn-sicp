@@ -20,3 +20,7 @@ section 3.3.4, 3.3.5
 ### Chap4
 
 section 4.4.4, along with all the exercises starting from ex66 to the end of chap4.
+
+### Chap5
+
+section 5.3.2
